@@ -7,8 +7,8 @@ import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'dart:async';
-import 'core/utils/colors.dart';
-import 'service/subscription_db_service.dart';
+import '../core/utils/colors.dart';
+import '../service/subscription_db_service.dart';
 
 class SubscriptionPage extends StatefulWidget {
   const SubscriptionPage({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   late StreamSubscription _subscription;
   bool _purchasePending = false;
 
-   UserData ? userData;
+  UserData? userData;
 
   @override
   void initState() {
@@ -155,8 +155,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     bool subStatus = true;
     if (subStatus == true) {
       activeSubId = productId;
-    } else {
-    }
+    } else {}
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {});
     });
@@ -169,80 +168,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           backgroundColor: Colors.white,
           body: _loading
               ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                CircularProgressIndicator(),
-                SizedBox(
-                  height: 10,
-                ),
-                Text('Loading Product Details, Please wait...')
-              ],
-            ),
-          )
-              : Stack(
-            children: [
-              if (_queryProductError != null)
-                Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text(
-                        'Query Product Error(Got Error While Fetching Product Details) : $_queryProductError',
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
-              if (_queryProductError == null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 5),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Hi, ${userData?.username ??"Mi"}',
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold)),
-                            _buildRestoreButton()
-                          ],
-                        ),
-                        _buildConnectionCheckTile(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        if (!_notFoundIds.contains(sub1Id) &&
-                            _isAvailable)
-                          _buildMonthlySubTile(),
-                        if (_notFoundIds.contains(sub1Id))
-                          Text('Product $sub1Id not found'),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        if (!_notFoundIds.contains(sub2Id) &&
-                            _isAvailable)
-                          _buildYearlySubTile(),
-                        if (_notFoundIds.contains(sub2Id))
-                          Text('Product $sub2Id not found'),
-                      ],
-                    ),
-                  ),
-                ),
-              if (_purchasePending)
-                Container(
-                  width: double.maxFinite,
-                  height: double.maxFinite,
-                  color: AppColors.primaryColor,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -250,15 +175,89 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        "Processing Purchase, Please wait...",
-                        style: TextStyle(color: Colors.white),
-                      )
+                      Text('Loading Product Details, Please wait...')
                     ],
                   ),
                 )
-            ],
-          )),
+              : Stack(
+                  children: [
+                    if (_queryProductError != null)
+                      Center(
+                          child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                          'Query Product Error(Got Error While Fetching Product Details) : $_queryProductError',
+                          textAlign: TextAlign.center,
+                        ),
+                      )),
+                    if (_queryProductError == null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 5),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Hi, ${userData?.username ?? "Mi"}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold)),
+                                  _buildRestoreButton()
+                                ],
+                              ),
+                              _buildConnectionCheckTile(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              if (!_notFoundIds.contains(sub1Id) &&
+                                  _isAvailable)
+                                _buildMonthlySubTile(),
+                              if (_notFoundIds.contains(sub1Id))
+                                Text('Product $sub1Id not found'),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (!_notFoundIds.contains(sub2Id) &&
+                                  _isAvailable)
+                                _buildYearlySubTile(),
+                              if (_notFoundIds.contains(sub2Id))
+                                Text('Product $sub2Id not found'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (_purchasePending)
+                      Container(
+                        width: double.maxFinite,
+                        height: double.maxFinite,
+                        color: AppColors.primaryColor,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            CircularProgressIndicator(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Processing Purchase, Please wait...",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      )
+                  ],
+                )),
     );
   }
 
@@ -287,6 +286,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     const SizedBox(
                       height: 5,
                     ),
+
                     ///Product price
                     Text(pd.price,
                         // 'Price',
@@ -476,7 +476,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     if (Platform.isAndroid) {
       //update oldSubscription details for upgrading and downgrading subscription
       GooglePlayPurchaseDetails? oldSubscription;
-      if (userData?.oldPdFromDb != null) oldSubscription = userData?.oldPdFromDb;
+      if (userData?.oldPdFromDb != null)
+        oldSubscription = userData?.oldPdFromDb;
 
       purchaseParam = PurchaseParam(productDetails: productDetails);
 
